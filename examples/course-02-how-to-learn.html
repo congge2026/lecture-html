@@ -1,0 +1,1098 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>0.2 如何学这门课 | 乘势 AI 商业实战课</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-0:#060410;
+  --bg-1:#0a0817;
+  --bg-2:#15101f;
+  --bg-3:#1f1730;
+  --paper:#ebe5d5;
+  --cream:#d6cdb3;
+  --gold-d:#8a6a32;
+  --gold:#c8a35c;
+  --gold-l:#e8d4a0;
+  --gold-3:#f3d678;
+  --red:#d84a3a;
+  --red-d:#a8302c;
+  --green:#4caf50;
+  --muted:#8a8070;
+  --dim:#5c5648;
+  --line:rgba(200,163,92,0.18);
+
+  --f-serif:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+  --f-sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --f-num:"Cinzel","Cormorant Garamond",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg-0)}
+body{
+  font-family:var(--f-serif);
+  color:var(--paper);
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+  cursor:default;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:url('../images/bg-stage.jpg');
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  opacity:1;
+}
+@media (max-aspect-ratio:1/1){
+  body::before{
+    background-image:url('../images/bg-tile.jpg');
+    background-size:min(50vh,90vw) auto;
+    background-repeat:repeat;
+  }
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:radial-gradient(ellipse 75% 65% at center,rgba(0,0,0,0.15) 0%,transparent 80%);
+}
+
+.deck{
+  position:fixed;
+  inset:0;
+  z-index:1;
+}
+.slide{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:6vh 8vw;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 0.5s ease,transform 0.5s cubic-bezier(.22,.61,.36,1);
+  transform:translateY(20px);
+}
+.slide.active{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+.eyebrow{
+  font-size:clamp(0.85rem,1.1vw,1rem);
+  color:var(--gold);
+  letter-spacing:0.4em;
+  margin-bottom:3vh;
+  text-transform:uppercase;
+  font-weight:500;
+  text-align:center;
+}
+.eyebrow .num{
+  font-family:var(--f-num);
+  color:var(--gold-3);
+  margin-right:0.6em;
+  font-weight:600;
+}
+
+h1.title{
+  font-size:clamp(2.4rem,5.5vw,5rem);
+  font-weight:700;
+  text-align:center;
+  line-height:1.25;
+  color:var(--paper);
+  margin-bottom:2vh;
+}
+h2.subtitle{
+  font-size:clamp(1.4rem,2.6vw,2.4rem);
+  text-align:center;
+  color:var(--cream);
+  font-weight:400;
+  line-height:1.5;
+  margin-top:1.5vh;
+}
+
+.bignum{
+  font-family:var(--f-num);
+  font-size:clamp(5rem,16vw,14rem);
+  font-weight:600;
+  line-height:0.95;
+  color:var(--gold);
+  text-shadow:0 0 60px rgba(200,163,92,0.3);
+  letter-spacing:-0.02em;
+  text-align:center;
+}
+.bignum.red{color:var(--red);text-shadow:0 0 60px rgba(216,74,58,0.3)}
+.bignum.cream{color:var(--paper);text-shadow:0 0 60px rgba(235,229,213,0.2)}
+
+.label{
+  font-size:clamp(1.1rem,2vw,1.6rem);
+  color:var(--gold-l);
+  text-align:center;
+  letter-spacing:0.15em;
+  margin-bottom:1.5vh;
+}
+.caption{
+  font-size:clamp(1rem,1.6vw,1.4rem);
+  color:var(--cream);
+  text-align:center;
+  margin-top:2vh;
+  line-height:1.6;
+}
+.caption-sm{
+  font-size:clamp(0.9rem,1.3vw,1.1rem);
+  color:var(--muted);
+  text-align:center;
+  margin-top:1.5vh;
+  line-height:1.6;
+}
+
+.quote-big{
+  font-size:clamp(2rem,4.5vw,4rem);
+  text-align:center;
+  line-height:1.5;
+  font-weight:500;
+  color:var(--paper);
+}
+.quote-big .em{color:var(--gold-3);font-weight:700}
+.quote-big .red{color:var(--red);font-weight:700}
+
+.quote-mid{
+  font-size:clamp(1.5rem,3vw,2.8rem);
+  text-align:center;
+  line-height:1.6;
+  color:var(--cream);
+}
+.quote-mid .em{color:var(--gold-3)}
+.quote-mid .red{color:var(--red)}
+
+.vs{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:clamp(2rem,5vw,5rem);
+  align-items:center;
+  margin:4vh 0;
+}
+.vs-side{text-align:center}
+.vs-name{
+  font-size:clamp(1.4rem,2.6vw,2.2rem);
+  color:var(--cream);
+  margin-bottom:0.8em;
+  letter-spacing:0.1em;
+}
+.vs-mid{
+  font-family:var(--f-num);
+  font-size:clamp(2rem,4vw,3.5rem);
+  color:var(--red);
+  font-weight:600;
+}
+
+.list-big{
+  text-align:center;
+  font-size:clamp(1.4rem,2.5vw,2rem);
+  line-height:2.2;
+  color:var(--cream);
+}
+.list-big li{
+  list-style:none;
+  margin:0.4em 0;
+}
+.list-big .em{color:var(--gold-3);font-weight:700}
+.list-big .num{
+  font-family:var(--f-num);
+  color:var(--gold);
+  font-weight:600;
+  margin-right:0.5em;
+}
+
+.list-arrow{
+  text-align:center;
+  font-size:clamp(1.4rem,2.5vw,2rem);
+  line-height:2;
+  color:var(--cream);
+}
+.list-arrow .arrow{
+  display:block;
+  color:var(--gold);
+  font-size:0.8em;
+  margin:0.4em 0;
+}
+
+.three-col{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:clamp(2rem,4vw,4rem);
+  max-width:1200px;
+  margin:4vh auto;
+}
+.col-card{
+  text-align:center;
+  padding:clamp(1.5rem,2.5vw,2.5rem);
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(255,255,255,0.02);
+}
+.col-card.primary{
+  border:2px solid var(--gold);
+  background:rgba(200,163,92,0.08);
+}
+.col-medal{
+  font-size:clamp(2.5rem,5vw,4.5rem);
+  margin-bottom:1vh;
+}
+.col-title{
+  font-size:clamp(1.2rem,2vw,1.7rem);
+  color:var(--paper);
+  font-weight:700;
+  margin-bottom:0.5em;
+}
+.col-desc{
+  font-size:clamp(0.95rem,1.4vw,1.2rem);
+  color:var(--muted);
+  line-height:1.6;
+}
+
+/* roadmap */
+.roadmap{
+  font-family:var(--f-sans);
+  font-size:clamp(0.95rem,1.4vw,1.2rem);
+  line-height:2;
+  text-align:left;
+  color:var(--cream);
+  padding:2rem;
+  border-radius:8px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--line);
+  max-width:780px;
+  width:100%;
+}
+.roadmap .stage{
+  display:flex;
+  align-items:center;
+  gap:1em;
+  margin:0.3em 0;
+}
+.roadmap .stage-num{
+  font-family:var(--f-num);
+  color:var(--gold);
+  font-weight:600;
+  width:3em;
+  flex-shrink:0;
+}
+.roadmap .star{color:var(--red);font-weight:700}
+.roadmap .here{
+  color:var(--gold-3);
+  font-weight:700;
+  margin-left:0.5em;
+}
+.roadmap .desc{
+  color:var(--muted);
+  font-size:0.85em;
+}
+.roadmap .stage-title{
+  color:var(--cream);
+  flex:1;
+}
+.roadmap .stage-title.star{
+  color:var(--gold-3);
+}
+.roadmap .count{
+  font-family:var(--f-num);
+  color:var(--gold-d);
+  font-size:0.9em;
+  flex-shrink:0;
+}
+
+.stage-card{
+  max-width:980px;
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:rgba(255,255,255,0.03);
+  padding:clamp(1.5rem,3vw,3rem);
+}
+.stage-card.star{
+  border:2px solid var(--gold);
+  background:rgba(200,163,92,0.08);
+}
+.stage-card-head{
+  display:flex;
+  align-items:baseline;
+  gap:1em;
+  margin-bottom:2vh;
+  flex-wrap:wrap;
+}
+.stage-card-num{
+  font-family:var(--f-num);
+  font-size:clamp(1.4rem,2.4vw,2rem);
+  color:var(--gold);
+  font-weight:600;
+}
+.stage-card-num.star{color:var(--red)}
+.stage-card-title{
+  font-size:clamp(1.5rem,3vw,2.4rem);
+  color:var(--paper);
+  font-weight:700;
+}
+.stage-card-count{
+  font-family:var(--f-num);
+  font-size:clamp(1rem,1.4vw,1.2rem);
+  color:var(--gold-d);
+  margin-left:auto;
+}
+.stage-card-body{
+  font-size:clamp(0.85rem,1.25vw,1.1rem);
+  color:var(--cream);
+  line-height:1.75;
+}
+.stage-card-body .em{color:var(--gold-3);font-weight:600}
+.stage-card-body .lesson{
+  display:block;
+  color:var(--cream);
+  padding-left:0;
+}
+.stage-card-body .ln{
+  font-family:var(--f-num);
+  color:var(--gold);
+  font-weight:600;
+  margin-right:0.5em;
+  display:inline-block;
+  min-width:2.6em;
+}
+.stage-card-body .group{
+  color:var(--gold-3);
+  font-weight:700;
+  margin-top:0.5em;
+  margin-bottom:0.1em;
+  letter-spacing:0.05em;
+  font-size:1.05em;
+}
+.stage-card-body .tag{
+  color:var(--red);
+  font-weight:700;
+  margin-left:0.4em;
+  font-size:0.9em;
+}
+.stage-card-body .here{
+  color:var(--gold-3);
+  font-weight:700;
+  margin-left:0.4em;
+  font-size:0.9em;
+}
+
+/* 开场封面 */
+.slide-opening{
+  background-image:url('../images/bg-cover.jpg');
+  background-size:cover;
+  background-position:center center;
+  background-repeat:no-repeat;
+  align-items:center;
+  text-align:center;
+}
+@media (max-aspect-ratio:1/1){
+  .slide-opening{background-image:none}
+}
+.slide-cover:not(.slide-opening){background:transparent}
+
+.cover-brand{
+  display:flex;
+  align-items:center;
+  gap:clamp(1rem,2vw,2rem);
+  margin-bottom:4vh;
+}
+.cover-line{
+  width:clamp(40px,8vw,90px);
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.cover-brand-text{
+  font-family:var(--f-serif);
+  color:var(--gold);
+  font-size:clamp(0.9rem,1.4vw,1.1rem);
+  letter-spacing:0.4em;
+  padding-left:0.4em;
+}
+.cover-title{
+  font-size:clamp(3rem,8vw,7rem);
+  font-weight:900;
+  color:var(--paper);
+  text-align:center;
+  letter-spacing:0.15em;
+  line-height:1.1;
+  margin-bottom:3vh;
+}
+.cover-title .gold{color:var(--gold-3)}
+.cover-chapter{
+  font-family:var(--f-num);
+  font-size:clamp(1.5rem,3vw,2.5rem);
+  color:var(--gold);
+  letter-spacing:0.3em;
+  margin-bottom:3vh;
+}
+.cover-motto{
+  font-style:italic;
+  color:var(--cream);
+  font-size:clamp(1.3rem,2.2vw,1.8rem);
+  text-align:center;
+  margin-top:5vh;
+  letter-spacing:0.08em;
+}
+.cover-by{
+  font-family:var(--f-num);
+  color:var(--gold-d);
+  font-size:clamp(0.9rem,1.3vw,1.1rem);
+  margin-top:2vh;
+  letter-spacing:0.2em;
+}
+
+.controls{
+  position:fixed;
+  bottom:24px;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:space-between;
+  padding:0 32px;
+  pointer-events:none;
+  z-index:100;
+  font-family:var(--f-sans);
+}
+.hint{
+  font-size:0.78rem;
+  color:var(--muted);
+  letter-spacing:0.1em;
+}
+.progress{
+  font-family:var(--f-num);
+  font-size:0.95rem;
+  color:var(--gold-d);
+  font-weight:600;
+  letter-spacing:0.15em;
+}
+
+.progress-bar{
+  position:fixed;
+  top:0;
+  left:0;
+  height:3px;
+  background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-3));
+  z-index:101;
+  transition:width 0.5s ease;
+  width:0;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.slide.active .eyebrow,
+.slide.active .label,
+.slide.active h1,
+.slide.active h2,
+.slide.active .bignum,
+.slide.active .caption,
+.slide.active .quote-big,
+.slide.active .quote-mid,
+.slide.active .vs,
+.slide.active .list-big li,
+.slide.active .list-arrow > *,
+.slide.active .three-col,
+.slide.active .roadmap,
+.slide.active .stage-card{
+  animation:fadeUp 0.7s cubic-bezier(.22,.61,.36,1) backwards;
+}
+.slide.active .eyebrow{animation-delay:0.05s}
+.slide.active h1.title{animation-delay:0.15s}
+.slide.active h2.subtitle{animation-delay:0.3s}
+.slide.active .bignum{animation-delay:0.25s}
+.slide.active .label{animation-delay:0.15s}
+.slide.active .caption{animation-delay:0.4s}
+.slide.active .quote-big{animation-delay:0.2s}
+.slide.active .quote-mid{animation-delay:0.2s}
+.slide.active .list-big li:nth-child(1){animation-delay:0.25s}
+.slide.active .list-big li:nth-child(2){animation-delay:0.4s}
+.slide.active .list-big li:nth-child(3){animation-delay:0.55s}
+.slide.active .list-big li:nth-child(4){animation-delay:0.7s}
+.slide.active .list-big li:nth-child(5){animation-delay:0.85s}
+
+.section-divider{
+  width:60px;
+  height:2px;
+  background:var(--gold);
+  margin:3vh auto;
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="deck">
+
+<!-- ============ COVER ============ -->
+<section class="slide active slide-cover slide-opening" data-section="cover">
+  <div class="cover-chapter" style="font-size:clamp(1.2rem,2.4vw,1.8rem)">第 〇 章 · 0.2</div>
+  <h1 class="cover-title" style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;color:var(--cream);margin-top:2vh">如何学这门课<br>2026 年小白学 AI 的正确路径图</h1>
+  <div class="cover-by" style="margin-top:8vh">— 数字生命 KING —</div>
+</section>
+
+<!-- ============ 0.2 标题 ============ -->
+<section class="slide" data-section="0.2">
+  <div class="eyebrow"><span class="num">0.2</span>第二节</div>
+  <h1 class="title">如何学<span style="color:var(--gold-3)">这门课</span>?</h1>
+  <div class="section-divider"></div>
+  <h2 class="subtitle">学习理念 · 学习路径</h2>
+</section>
+
+<!-- 本节讲两件事 -->
+<section class="slide">
+  <div class="eyebrow">这节课讲两件事</div>
+  <ul class="list-big">
+    <li><span class="num">①</span><span class="em">学习理念</span> · 把脑子里那根弦换掉</li>
+    <li><span class="num">②</span>完整<span class="em">课程地图</span> · 你该按什么顺序学</li>
+  </ul>
+</section>
+
+<!-- ============ Part 1 · 学习理念 ============ -->
+<section class="slide">
+  <div class="eyebrow">第一部分</div>
+  <h1 class="title">三个<span style="color:var(--gold-3)">学习理念</span></h1>
+  <div class="section-divider"></div>
+  <h2 class="subtitle">学之前 · 先换脑子</h2>
+</section>
+
+<!-- 理念 1 标题 -->
+<section class="slide">
+  <div class="eyebrow">理念 ①</div>
+  <h1 class="title" style="font-size:clamp(3rem,6vw,5.5rem)"><span style="color:var(--gold-3)">AI First</span></h1>
+  <h2 class="subtitle" style="margin-top:3vh">遇事不会 · <span style="color:var(--red);font-weight:700">先问 AI</span></h2>
+</section>
+
+<!-- 习惯转变 -->
+<section class="slide">
+  <div class="eyebrow">习惯的转变</div>
+  <div class="vs">
+    <div class="vs-side">
+      <div class="vs-name" style="color:var(--muted)">过去</div>
+      <div class="quote-mid" style="color:var(--muted);font-size:clamp(1.4rem,2.4vw,2rem)">不懂<br>问<span style="color:var(--paper)">人</span></div>
+    </div>
+    <div class="vs-mid">→</div>
+    <div class="vs-side">
+      <div class="vs-name" style="color:var(--gold-3)">现在</div>
+      <div class="quote-mid" style="color:var(--gold-3);font-size:clamp(1.4rem,2.4vw,2rem);font-weight:700">不懂<br>问 <span style="color:var(--red)">AI</span></div>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:3vh">无论什么问题 · 先去跟 AI 交流</div>
+</section>
+
+<!-- 解决不了的路径 -->
+<section class="slide">
+  <div class="list-arrow">
+    <div>遇到问题</div>
+    <div class="arrow">↓</div>
+    <div style="color:var(--gold-3);font-weight:700">先问 AI</div>
+    <div class="arrow">↓</div>
+    <div>AI 解决不了</div>
+    <div class="arrow">↓</div>
+    <div style="color:var(--red);font-weight:700">再来群里问</div>
+  </div>
+</section>
+
+<!-- 不是为减负 -->
+<section class="slide">
+  <div class="quote-big">
+    我这样讲<br>
+    <span style="color:var(--muted);font-size:0.7em">不是为了减轻答疑工作</span><br>
+    <br>
+    是为了让你<br>
+    完成<span class="em">习惯的转变</span>
+  </div>
+  <div class="caption" style="margin-top:5vh;color:var(--cream)">人机协作 · 从这一刻开始</div>
+</section>
+
+<!-- 理念 2 标题 -->
+<section class="slide">
+  <div class="eyebrow">理念 ②</div>
+  <h1 class="title" style="font-size:clamp(2.6rem,5.5vw,4.8rem)">先<span style="color:var(--gold-3)">看见</span> · 再<span style="color:var(--gold-3)">相信</span></h1>
+  <h2 class="subtitle" style="margin-top:3vh">学习兴趣 · 比自律重要</h2>
+</section>
+
+<!-- 教育 11 年的经验 -->
+<section class="slide">
+  <div class="quote-big">
+    我做教育<br>
+    <span class="em">11 年</span>
+  </div>
+  <div class="quote-mid" style="margin-top:5vh">
+    大多数老师讲课<br>
+    喜欢<span class="em">先讲原理</span>·<span class="em">再讲案例</span>
+  </div>
+  <div class="caption-sm" style="margin-top:2vh">先打牢底层逻辑 · 再做实战</div>
+</section>
+
+<!-- 但这在 AI 学习里不灵 -->
+<section class="slide">
+  <div class="quote-big">
+    但在 AI 学习里<br>
+    <br>
+    这条路 ——<br>
+    <span class="red">不灵</span>
+  </div>
+  <div class="caption" style="margin-top:5vh;color:var(--muted)">原理还没讲完 · 学员已经放弃了</div>
+</section>
+
+<!-- 大厂名言 -->
+<section class="slide">
+  <div class="eyebrow">国内某大厂名言</div>
+  <div class="quote-big">
+    "<span class="em">先相信</span> · <span class="em">再看见</span>"
+  </div>
+  <div class="quote-mid" style="margin-top:5vh;color:var(--muted)">但要做到 · <span class="red">太难了</span></div>
+  <div class="caption" style="margin-top:3vh">学习本来就是反人性的事</div>
+</section>
+
+<!-- 我反过来 -->
+<section class="slide">
+  <div class="eyebrow">我的建议</div>
+  <div class="quote-big">
+    反过来 ——<br>
+    <br>
+    <span class="em">先看见</span><br>
+    再<span class="em">相信</span>
+  </div>
+</section>
+
+<!-- 具体怎么做 -->
+<section class="slide">
+  <div class="eyebrow">具体怎么做</div>
+  <div class="list-arrow">
+    <div>跳到任意一章 · <span style="color:var(--gold-3);font-weight:700">你感兴趣的实战</span></div>
+    <div class="arrow">↓</div>
+    <div>觉得这个案例 · <span class="em" style="color:var(--gold-3);font-weight:700">是你所需要的</span></div>
+    <div class="arrow">↓</div>
+    <div>先<span style="color:var(--red);font-weight:700">上手做</span></div>
+    <div class="arrow">↓</div>
+    <div>过程中遇到问题</div>
+    <div class="arrow">↓</div>
+    <div style="color:var(--gold-3);font-weight:700">再回头补理论 · 查缺补漏</div>
+  </div>
+</section>
+
+<!-- 为什么有效 -->
+<section class="slide">
+  <div class="quote-big">
+    只有知道<br>
+    AI <span class="em">能帮你做什么</span><br>
+    <br>
+    才会真正<br>
+    <span class="em">点燃学习兴趣</span>
+  </div>
+  <div class="quote-mid" style="margin-top:5vh">
+    兴趣 <span class="red">&gt;</span> 自律
+  </div>
+</section>
+
+<!-- 理念 3 标题 -->
+<section class="slide">
+  <div class="eyebrow">理念 ③</div>
+  <h1 class="title" style="font-size:clamp(2.6rem,5.5vw,4.8rem)">不追<span style="color:var(--gold-3)">热点</span> · 讲<span style="color:var(--gold-3)">底层</span></h1>
+  <h2 class="subtitle" style="margin-top:3vh">学一遍 · 用一辈子</h2>
+</section>
+
+<!-- 小龙虾反例 -->
+<section class="slide">
+  <div class="eyebrow">举个反例</div>
+  <div class="quote-big">
+    前一段时间很火的 ——<br>
+    <br>
+    <span style="color:var(--red);font-weight:700">小龙虾</span>
+  </div>
+  <div class="quote-mid" style="margin-top:5vh;color:var(--muted)">这种东西 · 我<span class="red">不会讲</span></div>
+</section>
+
+<!-- 为什么不讲 -->
+<section class="slide">
+  <div class="eyebrow">为什么不讲?</div>
+  <ul class="list-big">
+    <li><span class="num">①</span>它<span style="color:var(--muted)">不是</span><span class="em">底层能力</span></li>
+    <li><span class="num">②</span>它<span style="color:var(--muted)">不是</span><span class="em">底层智能体</span></li>
+    <li><span class="num">③</span>它只是 · <span class="red">昙花一现</span></li>
+  </ul>
+  <div class="caption" style="margin-top:5vh;color:var(--muted)">学完今天就过时 · 时间白花</div>
+</section>
+
+<!-- 我要讲什么 -->
+<section class="slide">
+  <div class="quote-big">
+    我要讲的是 ——<br>
+    <br>
+    你学会了<br>
+    可以<span class="em">举一反三</span><br>
+    的知识
+  </div>
+  <div class="quote-mid" style="margin-top:5vh">
+    一次投入 · <span class="em">长期回报</span>
+  </div>
+</section>
+
+<!-- 收尾理念 -->
+<section class="slide">
+  <div class="eyebrow">三个理念 · 记住</div>
+  <ul class="list-big">
+    <li><span class="num">①</span>AI First · <span class="em">先问 AI</span></li>
+    <li><span class="num">②</span>先<span class="em">看见</span> · 再相信</li>
+    <li><span class="num">③</span>不追热点 · <span class="em">讲底层 · 举一反三</span></li>
+  </ul>
+  <div class="quote-mid" style="margin-top:5vh">
+    这是你<span class="em">学得快 · 学得久</span>的根本
+  </div>
+</section>
+
+<!-- ============ Part 2 · 课程地图 ============ -->
+<section class="slide">
+  <div class="eyebrow">第二部分</div>
+  <h1 class="title">完整<span style="color:var(--gold-3)">课程地图</span></h1>
+  <div class="section-divider"></div>
+  <h2 class="subtitle">42 节正课 · 6 大阶段</h2>
+</section>
+
+<!-- 全景路线图 -->
+<section class="slide">
+  <div class="eyebrow">六大阶段 · 一张图</div>
+  <div class="roadmap">
+    <div class="stage">
+      <span class="stage-num">0</span>
+      <span class="stage-title">开课导言</span>
+      <span class="count">3 节</span>
+      <span class="here">← 你正在这里</span>
+    </div>
+    <div class="stage">
+      <span class="stage-num">1</span>
+      <span class="stage-title">AI 通识与底层逻辑</span>
+      <span class="count">5 节</span>
+    </div>
+    <div class="stage">
+      <span class="stage-num">2</span>
+      <span class="stage-title">AI 大模型与工具栈</span>
+      <span class="count">10 节</span>
+    </div>
+    <div class="stage">
+      <span class="stage-num star">★ 3</span>
+      <span class="stage-title star">普通人的 AI 智能体开发之路</span>
+      <span class="count">10 节</span>
+    </div>
+    <div class="stage">
+      <span class="stage-num star">★ 4</span>
+      <span class="stage-title star">普通人的 AI 运营变现之路</span>
+      <span class="count">8 节</span>
+    </div>
+    <div class="stage">
+      <span class="stage-num star">★ 5</span>
+      <span class="stage-title star">老板用 AI 赚更多利润</span>
+      <span class="count">5 节</span>
+    </div>
+    <div class="stage">
+      <span class="stage-num">6</span>
+      <span class="stage-title">元能力 &amp; 持续学习</span>
+      <span class="count">2 节</span>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:3vh"><span style="color:var(--red);font-weight:700">★</span> 三个核心阶段 · 是你回本的地方</div>
+</section>
+
+<!-- 第〇章 -->
+<section class="slide">
+  <div class="stage-card">
+    <div class="stage-card-head">
+      <span class="stage-card-num">第 〇 章</span>
+      <span class="stage-card-title">开课导言</span>
+      <span class="stage-card-count">3 节</span>
+    </div>
+    <div class="stage-card-body">
+      <div class="lesson"><span class="ln">0.1</span>为什么要学 AI</div>
+      <div class="lesson"><span class="ln">0.2</span>如何学这门课<span class="here">← 你正在这里</span></div>
+      <div class="lesson"><span class="ln">0.3</span>入门体验 · Claude Code 安装和应用</div>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:3vh;color:var(--gold-3);font-weight:600">重点 · 3 节讲完 · 你已经能跑起来第一个 AI 工具</div>
+</section>
+
+<!-- 第一阶段 -->
+<section class="slide">
+  <div class="stage-card">
+    <div class="stage-card-head">
+      <span class="stage-card-num">第一阶段</span>
+      <span class="stage-card-title">AI 通识与底层逻辑</span>
+      <span class="stage-card-count">5 节</span>
+    </div>
+    <div class="stage-card-body">
+      <div class="lesson"><span class="ln">1.1</span>一句话讲清大模型到底是什么</div>
+      <div class="lesson"><span class="ln">1.2</span>大模型能力边界 · <span class="em">能做 / 不能做</span></div>
+      <div class="lesson"><span class="ln">1.3</span>提示词不是玄学 · 3 个真正有用的原则</div>
+      <div class="lesson"><span class="ln">1.4</span>知识库是什么、什么时候才该用</div>
+      <div class="lesson"><span class="ln">1.5</span>从工具到智能体 · <span class="em">一切皆 Agent</span></div>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:3vh;color:var(--gold-3);font-weight:600">重点 · 建认知地图 · 后面所有工具不再陌生</div>
+</section>
+
+<!-- 第二阶段 -->
+<section class="slide">
+  <div class="stage-card">
+    <div class="stage-card-head">
+      <span class="stage-card-num">第二阶段</span>
+      <span class="stage-card-title">AI 大模型与工具栈</span>
+      <span class="stage-card-count">10 节</span>
+    </div>
+    <div class="stage-card-body">
+      <div class="lesson"><span class="ln">2.1</span>国内外主流大模型全景对比</div>
+      <div class="lesson"><span class="ln">2.2</span><span class="em">如何使用海外大模型</span></div>
+      <div class="lesson"><span class="ln">2.3</span>WorkBuddy · 桌面端 AI 工作流</div>
+      <div class="lesson"><span class="ln">2.4</span>Obsidian · 个人 / 团队知识库</div>
+      <div class="lesson"><span class="ln">2.5</span>飞书 + AI · 多维表格 / 文档 / 会议</div>
+      <div class="lesson"><span class="ln">2.6</span>什么是 CLI · 5 分钟扫盲</div>
+      <div class="lesson"><span class="ln">2.7</span><span class="em">Claude Code</span> 基础操作</div>
+      <div class="lesson"><span class="ln">2.8</span><span class="em">Skill</span> · 复刻你自己的工作流</div>
+      <div class="lesson"><span class="ln">2.9</span><span class="em">MCP</span> 工具协议</div>
+      <div class="lesson"><span class="ln">2.10</span>配置文件 · 智能体的底层语言</div>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:2vh;color:var(--gold-3);font-weight:600">重点 · 武器库齐 · 知道用什么、怎么选</div>
+</section>
+
+<!-- 第三阶段 ★ -->
+<section class="slide">
+  <div class="stage-card star">
+    <div class="stage-card-head">
+      <span class="stage-card-num star">★ 第三阶段</span>
+      <span class="stage-card-title">普通人的 AI 智能体开发之路</span>
+      <span class="stage-card-count">10 节</span>
+    </div>
+    <div class="stage-card-body">
+      <div class="lesson"><span class="ln">3.1</span>智能体开发全景 · 到底要会什么</div>
+      <div class="lesson"><span class="ln">3.2</span>提示词工程进阶 · 系统设计与调试</div>
+      <div class="lesson"><span class="ln">3.3</span>知识库入门 · 为什么需要外挂</div>
+      <div class="lesson"><span class="ln">3.4</span><span class="em">知识库实战</span> · 切分 / 向量化 / 检索召回</div>
+      <div class="lesson"><span class="ln">3.5</span>知识库进阶 · 召回优化与评估</div>
+      <div class="lesson"><span class="ln">3.6</span>工具调用与 <span class="em">Function Calling</span></div>
+      <div class="lesson"><span class="ln">3.7</span>多步规划与多智能体编排</div>
+      <div class="lesson"><span class="ln">3.8</span>数据集标注 · 怎么标、怎么管</div>
+      <div class="lesson"><span class="ln">3.9</span><span class="em">模型调优入门</span> · 什么时候微调</div>
+      <div class="lesson"><span class="ln">3.10</span>综合实战 · 打造一个垂直领域智能体</div>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:2vh;color:var(--gold-3);font-weight:600">重点 · 技术核心 · 学完即可接单</div>
+</section>
+
+<!-- 第四阶段 ★ -->
+<section class="slide">
+  <div class="stage-card star">
+    <div class="stage-card-head">
+      <span class="stage-card-num star">★ 第四阶段</span>
+      <span class="stage-card-title">普通人的 AI 运营变现之路</span>
+      <span class="stage-card-count">8 节</span>
+    </div>
+    <div class="stage-card-body">
+      <div class="lesson"><span class="ln">4.1</span>2026 普通人用 AI 变现的 3 种姿势</div>
+      <div class="group">路径 A · 做 AI 博主</div>
+      <div class="lesson"><span class="ln">4.2</span>小白入局自媒体 · 定位 + 内容生产 4 步法</div>
+      <div class="lesson"><span class="ln">4.3</span>实战 · <span class="em">对标分析智能体</span><span class="tag">★ 重点</span></div>
+      <div class="lesson"><span class="ln">4.4</span>实战 · 短视频文案知识库</div>
+      <div class="lesson"><span class="ln">4.5</span>变现 · 广告 / 带货 / 出课 / 咨询</div>
+      <div class="group">路径 B · 接 AI 改造单</div>
+      <div class="lesson"><span class="ln">4.6</span>接单地图 · 中小企业最愿意付费的服务</div>
+      <div class="lesson"><span class="ln">4.7</span>报价 + 谈单 + 交付 SOP · <span class="em">5000 — 5 万</span></div>
+      <div class="lesson"><span class="ln">4.8</span>独立顾问 · IP + 服务 + 培训</div>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:2vh;color:var(--gold-3);font-weight:600">重点 · 普通人最直接的回本路径</div>
+</section>
+
+<!-- 第五阶段 ★ -->
+<section class="slide">
+  <div class="stage-card star">
+    <div class="stage-card-head">
+      <span class="stage-card-num star">★ 第五阶段</span>
+      <span class="stage-card-title">老板用 AI 赚更多利润</span>
+      <span class="stage-card-count">5 节</span>
+    </div>
+    <div class="stage-card-body">
+      <div class="lesson"><span class="ln">5.1</span>老板视角 · AI 降本增效的底层逻辑</div>
+      <div class="group">增效 · 赚更多</div>
+      <div class="lesson"><span class="ln">5.2</span><span class="em">AI 做销售管理</span> · 线索清洗 + 跟进 + 话术</div>
+      <div class="lesson"><span class="ln">5.3</span><span class="em">AI 做营销</span> · 朋友圈批量 + 数字人</div>
+      <div class="group">降本 · 省更多</div>
+      <div class="lesson"><span class="ln">5.4</span>办公智能体 · 会议纪要 + 待办 + 跨部门同步</div>
+      <div class="lesson"><span class="ln">5.5</span><span class="em">企业知识库智能体</span> · 产品手册 + FAQ + 销售经验</div>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:2vh;color:var(--gold-3);font-weight:600">重点 · 5 个实战 · 直接照搬进你公司</div>
+</section>
+
+<!-- 第六阶段 -->
+<section class="slide">
+  <div class="stage-card">
+    <div class="stage-card-head">
+      <span class="stage-card-num">第六阶段</span>
+      <span class="stage-card-title">元能力 &amp; 持续学习</span>
+      <span class="stage-card-count">2 节</span>
+    </div>
+    <div class="stage-card-body">
+      <div class="lesson"><span class="ln">6.1</span>搜商 · 在 AI 时代怎么问、问什么</div>
+      <div class="lesson"><span class="ln">6.2</span>用 <span class="em">Claude Code</span> · 学任何新东西</div>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:3vh;color:var(--gold-3);font-weight:600">重点 · 工具会过时 · 元能力不会</div>
+</section>
+
+<!-- 怎么走才对 -->
+<section class="slide">
+  <div class="eyebrow">怎么走 · 才对?</div>
+  <div class="quote-mid" style="margin-top:2vh">
+    回到第二个理念 ——
+  </div>
+  <div class="quote-big" style="margin-top:3vh">
+    先<span class="em">看见</span><br>
+    再<span class="em">相信</span>
+  </div>
+</section>
+
+<!-- 推荐学习节奏 -->
+<section class="slide">
+  <div class="eyebrow">推荐学习节奏</div>
+  <ul class="list-big" style="line-height:2.4">
+    <li><span style="color:var(--gold);font-family:var(--f-num);font-weight:600;margin-right:1em">当天</span>看完<span class="em">第〇章</span> · 跑通 Claude Code</li>
+    <li><span style="color:var(--gold);font-family:var(--f-num);font-weight:600;margin-right:1em">第一步</span>跳到<span class="em">第四 / 第五阶段</span> · 找你最感兴趣的案例</li>
+    <li><span style="color:var(--gold);font-family:var(--f-num);font-weight:600;margin-right:1em">动手</span>先<span class="em">做出来</span> · 遇到问题再回头</li>
+    <li><span style="color:var(--gold);font-family:var(--f-num);font-weight:600;margin-right:1em">补课</span>哪儿不懂 · 回去看<span class="em">一 / 二 / 三阶段</span></li>
+    <li><span style="color:var(--gold);font-family:var(--f-num);font-weight:600;margin-right:1em">持续</span>第六阶段 · 元能力 · 贯穿始终</li>
+  </ul>
+</section>
+
+<!-- 总结 -->
+<section class="slide">
+  <div class="eyebrow">三个理念 + 一张地图</div>
+  <ul class="list-big">
+    <li><span class="num">①</span>AI First · <span class="em">先问 AI · 再问群</span></li>
+    <li><span class="num">②</span><span class="em">先看见 · 再相信</span> · 先动手 · 再补理论</li>
+    <li><span class="num">③</span>不追热点 · <span class="em">学举一反三</span>的东西</li>
+  </ul>
+  <div class="quote-mid" style="margin-top:4vh">
+    地图你有了<br>
+    现在 · <span class="em">开始走</span>
+  </div>
+</section>
+
+<!-- 收尾封面 -->
+<section class="slide slide-cover">
+  <div class="cover-brand">
+    <div class="cover-line"></div>
+    <div class="cover-brand-text">乘势 AI 商业实战课</div>
+    <div class="cover-line"></div>
+  </div>
+  <h1 class="cover-title" style="font-size:clamp(3rem,7vw,6rem)">
+    下一节<br>
+    <span class="gold">动手</span>跑起来
+  </h1>
+  <div class="cover-motto" style="margin-top:5vh">虽有智慧, 不如乘势</div>
+</section>
+
+</div>
+
+<div class="controls">
+  <div class="hint">← → 翻页 · 空格下一页 · F 全屏 · Home 首页</div>
+  <div class="progress" id="progress">1 / 1</div>
+</div>
+
+<script>
+let current = 0;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const total = slides.length;
+const progress = document.getElementById('progress');
+const progressBar = document.getElementById('progressBar');
+
+function show(n){
+  if(n < 0 || n >= total) return;
+  slides[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  progress.textContent = `${current + 1} / ${total}`;
+  progressBar.style.width = `${((current + 1) / total) * 100}%`;
+  slides[current].scrollTop = 0;
+}
+
+function next(){show(Math.min(current + 1, total - 1))}
+function prev(){show(Math.max(current - 1, 0))}
+
+document.addEventListener('keydown', e => {
+  switch(e.key){
+    case 'ArrowRight':
+    case ' ':
+    case 'PageDown':
+    case 'Enter':
+      e.preventDefault();
+      next();
+      break;
+    case 'ArrowLeft':
+    case 'PageUp':
+    case 'Backspace':
+      e.preventDefault();
+      prev();
+      break;
+    case 'Home':
+      e.preventDefault();
+      show(0);
+      break;
+    case 'End':
+      e.preventDefault();
+      show(total - 1);
+      break;
+    case 'f':
+    case 'F':
+      e.preventDefault();
+      if(!document.fullscreenElement){
+        document.documentElement.requestFullscreen?.();
+      }else{
+        document.exitFullscreen?.();
+      }
+      break;
+    case 'Escape':
+      break;
+  }
+});
+
+document.addEventListener('click', e => {
+  if(e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+  const w = window.innerWidth;
+  if(e.clientX < w / 4) prev();
+  else next();
+});
+
+let touchX = 0;
+document.addEventListener('touchstart', e => {
+  touchX = e.touches[0].clientX;
+}, {passive:true});
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchX;
+  if(dx > 60) prev();
+  else if(dx < -60) next();
+}, {passive:true});
+
+show(0);
+</script>
+
+</body>
+</html>
