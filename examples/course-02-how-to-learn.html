@@ -404,6 +404,8 @@ h2.subtitle{
 }
 @media (max-aspect-ratio:1/1){
   .slide-opening{background-image:none}
+  .brand-fix img{width:clamp(32px,8vw,46px)}
+  .brand-fix .brand-text{font-size:clamp(0.85rem,2.6vw,1rem);letter-spacing:0.15em}
 }
 .slide-cover:not(.slide-opening){background:transparent}
 
@@ -482,6 +484,11 @@ h2.subtitle{
   font-weight:600;
   letter-spacing:0.15em;
 }
+
+/* 全局品牌区(底部居中) */
+.brand-fix{position:fixed;bottom:5.5vh;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:clamp(0.9rem,1.5vw,1.5rem);pointer-events:none;z-index:50}
+.brand-fix img{width:clamp(40px,4vw,60px);height:auto;opacity:0.85;filter:drop-shadow(0 0 18px rgba(200,163,92,0.18))}
+.brand-fix .brand-text{font-family:var(--f-serif);font-size:clamp(0.95rem,1.3vw,1.2rem);color:var(--gold-l);letter-spacing:0.25em;padding-left:0.25em;white-space:nowrap;font-weight:500}
 
 .progress-bar{
   position:fixed;
