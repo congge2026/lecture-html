@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibecoding 实战 · 两个真实工具 | 数字生命 KING</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-0:#060410;
+  --bg-1:#0a0817;
+  --bg-2:#15101f;
+  --bg-3:#1f1730;
+  --paper:#ebe5d5;
+  --cream:#d6cdb3;
+  --gold-d:#8a6a32;
+  --gold:#c8a35c;
+  --gold-l:#e8d4a0;
+  --gold-3:#f3d678;
+  --red:#d84a3a;
+  --red-d:#a8302c;
+  --green:#4caf50;
+  --muted:#8a8070;
+  --dim:#5c5648;
+  --line:rgba(200,163,92,0.18);
+
+  --f-serif:"Noto Serif SC","Source Han Serif SC","STSong",serif;
+  --f-sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --f-num:"Cinzel","Cormorant Garamond",Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg-0)}
+body{font-family:var(--f-serif);color:var(--paper);-webkit-font-smoothing:antialiased;user-select:none;cursor:default;}
+
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:url('../images/bg-stage.jpg');
+  background-size:cover;background-position:center center;background-repeat:no-repeat;
+}
+@media (max-aspect-ratio:1/1){
+  body::before{
+    background-image:url('../images/bg-tile.jpg');
+    background-size:min(50vh,90vw) auto;background-repeat:repeat;
+  }
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 75% 65% at center,rgba(0,0,0,0.15) 0%,transparent 80%);
+}
+
+.deck{position:fixed;inset:0;z-index:1;}
+.slide{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:6vh 8vw;
+  opacity:0;visibility:hidden;transition:opacity 0.5s ease,transform 0.5s cubic-bezier(.22,.61,.36,1);
+  transform:translateY(20px);
+}
+.slide.active{opacity:1;visibility:visible;transform:translateY(0);}
+/* 内容很满 / 大字 slide · 给底部 logo 让位避免遮挡 */
+.slide-with-brand{padding-bottom:16vh!important;}
+
+.eyebrow{
+  font-size:clamp(0.85rem,1.1vw,1rem);
+  color:var(--gold);letter-spacing:0.4em;margin-bottom:3vh;
+  text-transform:uppercase;font-weight:500;text-align:center;
+}
+.eyebrow .num{font-family:var(--f-num);color:var(--gold-3);margin-right:0.6em;font-weight:600;}
+.eyebrow-big{
+  font-size:clamp(1.3rem,2vw,1.8rem);
+  letter-spacing:0.3em;margin-bottom:5vh;color:var(--gold-3);
+  text-transform:none;font-weight:600;
+}
+/* 论证段落 · 介于 caption(22px) 和 quote-mid(56px) 之间的"中段" */
+.argument-line{
+  font-size:clamp(1.2rem,2.1vw,1.85rem);
+  text-align:center;line-height:1.75;color:var(--cream);
+  letter-spacing:0.02em;
+}
+.argument-line .em{color:var(--gold-3);font-weight:700}
+.argument-line .red{color:var(--red);font-weight:700}
+
+h1.title{
+  font-size:clamp(2.6rem,6vw,5.5rem);font-weight:700;text-align:center;
+  line-height:1.22;color:var(--paper);margin-bottom:2vh;
+}
+h2.subtitle{
+  font-size:clamp(1.6rem,3.2vw,3rem);text-align:center;
+  color:var(--cream);font-weight:400;line-height:1.45;margin-top:1.5vh;
+}
+
+.bignum{
+  font-family:var(--f-num);font-size:clamp(5rem,16vw,14rem);
+  font-weight:600;line-height:0.95;color:var(--gold);
+  text-shadow:0 0 60px rgba(200,163,92,0.3);
+  letter-spacing:-0.02em;text-align:center;
+}
+.bignum.red{color:var(--red);text-shadow:0 0 60px rgba(216,74,58,0.3)}
+.bignum.cream{color:var(--paper);text-shadow:0 0 60px rgba(235,229,213,0.2)}
+
+.midnum{
+  font-family:var(--f-num);font-size:clamp(3rem,8vw,7rem);font-weight:600;
+  line-height:1;color:var(--gold);text-shadow:0 0 40px rgba(200,163,92,0.25);
+  letter-spacing:-0.02em;text-align:center;
+}
+
+.label{
+  font-size:clamp(1.1rem,2vw,1.6rem);color:var(--gold-l);
+  text-align:center;letter-spacing:0.15em;margin-bottom:1.5vh;
+}
+.caption{
+  font-size:clamp(1rem,1.6vw,1.4rem);color:var(--cream);
+  text-align:center;margin-top:2vh;line-height:1.6;
+}
+.caption-sm{
+  font-size:clamp(0.9rem,1.3vw,1.1rem);color:var(--muted);
+  text-align:center;margin-top:1.5vh;line-height:1.6;
+}
+
+.quote-big{font-size:clamp(2.4rem,5.5vw,5.5rem);text-align:center;line-height:1.4;font-weight:500;color:var(--paper)}
+.quote-big .em{color:var(--gold-3);font-weight:700}
+.quote-big .red{color:var(--red);font-weight:700}
+.quote-mid{font-size:clamp(1.8rem,3.8vw,3.5rem);text-align:center;line-height:1.55;color:var(--cream)}
+.quote-mid .em{color:var(--gold-3)}
+.quote-mid .red{color:var(--red)}
+
+.list-big{text-align:center;font-size:clamp(1.5rem,2.8vw,2.4rem);line-height:2;color:var(--cream)}
+.list-big li{list-style:none;margin:0.3em 0}
+.list-big .em{color:var(--gold-3);font-weight:700}
+.list-big .num{font-family:var(--f-num);color:var(--gold);font-weight:600;margin-right:0.5em}
+
+.list-arrow{text-align:center;font-size:clamp(1.4rem,2.5vw,2rem);line-height:2;color:var(--cream)}
+.list-arrow .arrow{display:block;color:var(--gold);font-size:0.8em;margin:0.4em 0;}
+
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(2rem,5vw,5rem);align-items:center;margin:4vh 0}
+.vs-side{text-align:center}
+.vs-name{font-size:clamp(1.4rem,2.6vw,2.2rem);color:var(--cream);margin-bottom:0.8em;letter-spacing:0.1em}
+.vs-mid{font-family:var(--f-num);font-size:clamp(2rem,4vw,3.5rem);color:var(--red);font-weight:600}
+
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(2rem,4vw,4rem);max-width:1200px;margin:4vh auto;width:100%}
+.col-card{text-align:center;padding:clamp(1.5rem,2.5vw,2.5rem);border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,0.02)}
+.col-card.primary{border:2px solid var(--gold);background:rgba(200,163,92,0.08)}
+.col-medal{font-size:clamp(2.5rem,5vw,4.5rem);margin-bottom:1vh;font-family:var(--f-num);color:var(--gold)}
+.col-title{font-size:clamp(1.2rem,2vw,1.7rem);color:var(--paper);font-weight:700;margin-bottom:0.5em}
+.col-desc{font-size:clamp(0.95rem,1.4vw,1.2rem);color:var(--muted);line-height:1.6}
+.col-title.gold-cell{color:var(--gold-3)}
+
+.section-divider{width:60px;height:2px;background:var(--gold);margin:3vh auto}
+
+.em{color:var(--gold-3);font-weight:700}
+.red{color:var(--red);font-weight:700}
+.gold{color:var(--gold-3)}
+
+/* 流程框 */
+.flow-box{
+  font-family:var(--f-sans);text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:1.2vh;
+  font-size:clamp(1rem,1.6vw,1.4rem);
+}
+.flow-box .step{
+  padding:0.8em 1.4em;border:1px solid var(--line);border-radius:8px;
+  background:rgba(255,255,255,0.03);min-width:280px;color:var(--cream);
+}
+.flow-box .step.gold{border-color:var(--gold);background:rgba(200,163,92,0.08);color:var(--gold-3);font-weight:700;}
+.flow-box .arrow{color:var(--gold);font-size:1.2em;}
+
+.code-line{
+  font-family:'Cascadia Code','Consolas',monospace;
+  font-size:clamp(0.85rem,1.2vw,1.05rem);color:var(--gold-3);
+  background:rgba(200,163,92,0.06);border:1px solid var(--line);
+  padding:0.5em 1em;border-radius:6px;display:inline-block;margin:0.3em 0;
+}
+
+/* 两栏对比(prompt / 方案) */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:clamp(1.5rem,3vw,3rem);max-width:1100px;margin:3vh auto;width:100%}
+.col-prompt{padding:clamp(1.2rem,2vw,2rem);border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,0.02);text-align:left}
+.col-prompt-title{font-size:clamp(1.5rem,2.6vw,2.8rem);color:var(--gold-3);margin-bottom:1em;text-align:center;letter-spacing:0.16em;font-weight:700}
+.col-prompt-body{font-family:var(--f-sans);font-size:clamp(1.1rem,1.7vw,1.6rem);color:var(--cream);line-height:1.7;white-space:pre-wrap}
+.col-prompt-output{margin-top:1em;padding:0.8em 1em;border-left:3px solid var(--gold);font-size:clamp(0.8rem,1.05vw,0.95rem);color:var(--gold-l);font-style:italic;line-height:1.5}
+
+/* 踩坑表 */
+.pit-table{
+  font-family:var(--f-sans);border-collapse:collapse;width:min(1100px,95vw);
+  font-size:clamp(0.85rem,1.2vw,1.05rem);color:var(--cream);
+}
+.pit-table th, .pit-table td{
+  border-bottom:1px solid var(--line);padding:0.7em 1em;text-align:left;line-height:1.6;
+}
+.pit-table th{color:var(--gold);font-weight:700;letter-spacing:0.1em;font-size:0.95em;}
+.pit-table tr:last-child td{border-bottom:none;}
+.pit-table .red-cell{color:var(--red);font-weight:600;}
+.pit-table .gold-cell{color:var(--gold-3);font-weight:600;}
+
+/* 开场封面 · 留白克制版 */
+.slide-cover{background:radial-gradient(ellipse at center,rgba(21,16,31,0.25) 0%,rgba(2,2,8,0.5) 80%)}
+.slide-opening{
+  background-image:url('../images/bg-cover.jpg');
+  background-size:cover;background-position:center center;background-repeat:no-repeat;
+  align-items:center;text-align:center;
+}
+@media (max-aspect-ratio:1/1){.slide-opening{background-image:none}}
+
+.cover-brand{display:flex;align-items:center;gap:clamp(1rem,2vw,2rem);margin-bottom:4vh;}
+.cover-line{width:clamp(40px,8vw,90px);height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.cover-brand-text{
+  font-family:var(--f-serif);color:var(--gold);
+  font-size:clamp(0.9rem,1.4vw,1.1rem);letter-spacing:0.4em;padding-left:0.4em;
+}
+.cover-title{
+  font-size:clamp(3rem,8vw,7rem);font-weight:900;color:var(--paper);
+  text-align:center;letter-spacing:0.15em;line-height:1.1;margin-bottom:3vh;
+}
+.cover-title .gold{color:var(--gold-3)}
+.cover-chapter{
+  font-family:var(--f-num);font-size:clamp(1.5rem,3vw,2.5rem);
+  color:var(--gold);letter-spacing:0.3em;margin-bottom:3vh;
+}
+.cover-motto{
+  font-style:italic;color:var(--cream);
+  font-size:clamp(1.3rem,2.2vw,1.8rem);text-align:center;
+  margin-top:5vh;letter-spacing:0.08em;
+}
+.cover-by{
+  font-family:var(--f-num);color:var(--gold-d);
+  font-size:clamp(0.9rem,1.3vw,1.1rem);margin-top:2vh;letter-spacing:0.2em;
+}
+
+/* 自我介绍布局 · 左图右文 */
+.intro-row{
+  display:grid;grid-template-columns:auto 1fr;
+  gap:clamp(2rem,5vw,5rem);align-items:center;
+  max-width:1100px;margin:2vh auto 0;width:100%;
+}
+.intro-shot{
+  width:clamp(180px,22vw,300px);
+  border-radius:18px;overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:0 10px 40px rgba(0,0,0,0.45);
+  background:#000;
+}
+.intro-shot img{display:block;width:100%;height:auto}
+.intro-text{text-align:left}
+.intro-name{
+  font-family:var(--f-serif);font-size:clamp(2rem,4.5vw,3.6rem);
+  font-weight:700;color:var(--paper);line-height:1.2;margin-bottom:3vh;
+  letter-spacing:0.04em;
+}
+.intro-name .gold{color:var(--gold-3)}
+.intro-bullets{
+  list-style:none;padding:0;margin:0 0 3vh 0;
+  font-size:clamp(1.2rem,2.1vw,1.8rem);color:var(--cream);line-height:1.9;
+}
+.intro-bullets li{position:relative;padding-left:1.2em}
+.intro-bullets li::before{
+  content:"·";color:var(--gold);position:absolute;left:0;
+  font-weight:700;font-size:1.4em;line-height:1;
+}
+.intro-bullets .em{color:var(--gold-3);font-weight:700}
+.intro-tail{
+  font-size:clamp(0.95rem,1.4vw,1.2rem);color:var(--muted);
+  line-height:1.7;border-top:1px solid var(--line);padding-top:1.5vh;
+}
+@media (max-aspect-ratio:1/1){
+  .intro-row{grid-template-columns:1fr;gap:2rem}
+  .intro-shot{width:clamp(150px,40vw,220px);margin:0 auto}
+  .intro-text{text-align:center}
+  .intro-bullets li{padding-left:0;display:inline-block}
+}
+
+/* 实物截图展示 · 大图居中 + 边框金光 */
+.showcase-row{
+  display:flex;justify-content:center;align-items:center;
+  width:100%;margin:2vh auto 0;
+}
+.showcase-img,
+.showcase-video{
+  max-width:min(1180px,88vw);
+  max-height:62vh;
+  width:auto;height:auto;
+  border-radius:14px;
+  border:1px solid var(--line);
+  box-shadow:
+    0 18px 60px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(200,163,92,0.10),
+    0 0 80px rgba(200,163,92,0.08);
+  background:#000;
+  display:block;
+}
+.showcase-video{outline:none}
+
+/* Demo 占位横幅 */
+.demo-banner{
+  font-family:var(--f-sans);text-align:center;font-size:clamp(1.4rem,2.4vw,2.2rem);
+  color:var(--bg-0);background:var(--gold);padding:0.6em 1.6em;border-radius:8px;
+  letter-spacing:0.18em;font-weight:700;margin-bottom:4vh;
+  box-shadow:0 0 40px rgba(200,163,92,0.35);
+}
+.demo-banner.red{background:var(--red);color:var(--paper)}
+
+.controls{
+  position:fixed;bottom:24px;left:0;right:0;
+  display:flex;justify-content:space-between;padding:0 32px;
+  pointer-events:none;z-index:100;font-family:var(--f-sans);
+}
+.hint{font-size:0.78rem;color:var(--muted);letter-spacing:0.1em;}
+.progress{font-family:var(--f-num);font-size:0.95rem;color:var(--gold-d);font-weight:600;letter-spacing:0.15em;}
+
+.progress-bar{
+  position:fixed;top:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-3));
+  z-index:101;transition:width 0.5s ease;width:0;
+}
+
+.opening-brand{position:fixed;bottom:5.5vh;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:clamp(0.9rem,1.5vw,1.5rem);pointer-events:none;z-index:50}
+.opening-brand img{width:clamp(54px,5.5vw,90px);height:auto;opacity:0.95;filter:drop-shadow(0 0 24px rgba(200,163,92,0.22))}
+.opening-brand .brand-text{font-family:var(--f-serif);font-size:clamp(1.15rem,1.7vw,1.55rem);color:var(--gold-l);letter-spacing:0.32em;padding-left:0.32em;white-space:nowrap;font-weight:500}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.slide.active>*{animation:fadeUp 0.7s cubic-bezier(.22,.61,.36,1) backwards}
+.slide.active>*:nth-child(1){animation-delay:0.10s}
+.slide.active>*:nth-child(2){animation-delay:0.22s}
+.slide.active>*:nth-child(3){animation-delay:0.34s}
+.slide.active>*:nth-child(4){animation-delay:0.46s}
+.slide.active>*:nth-child(5){animation-delay:0.58s}
+
+@media (max-aspect-ratio:1/1){
+  .three-col{grid-template-columns:1fr;gap:1.5rem}
+  .two-col{grid-template-columns:1fr;gap:1.5rem}
+  .vs{grid-template-columns:1fr;gap:1.5rem}
+  .vs-mid{transform:rotate(90deg)}
+  .opening-brand img{width:clamp(40px,8vw,58px)}
+  .opening-brand .brand-text{font-size:clamp(0.9rem,2.8vw,1.05rem);letter-spacing:0.2em}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="deck">
+
+<!-- ============ 0 · 开场封面 ============ -->
+<section class="slide active slide-cover slide-opening">
+  <div class="cover-brand">
+    <div class="cover-line"></div>
+    <div class="cover-brand-text">VIBECODING SHARE</div>
+    <div class="cover-line"></div>
+  </div>
+  <div class="cover-chapter">两个真实工具</div>
+  <h1 class="cover-title">把<span class="gold">日常工作流</span><br>写成<span class="gold">代码</span></h1>
+  <h2 class="subtitle" style="margin-top:1vh">个人知识库 × 一键发布助手</h2>
+  <div class="cover-motto">代码 · 就是你的护城河</div>
+  <div class="cover-by">— 数字生命 KING —</div>
+</section>
+
+<!-- ============ 1 · 自我介绍 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">先 · 介 · 绍 · 一 · 下 · 我</div>
+  <div class="intro-row">
+    <div class="intro-shot">
+      <img src="../images/king-douyin.jpg" alt="数字生命 king · 抖音">
+    </div>
+    <div class="intro-text">
+      <h1 class="intro-name"><span class="gold">KING</span></h1>
+      <ul class="intro-bullets">
+        <li>前 <span class="em">微信</span> 高级产品运营</li>
+        <li>现 <span class="em">在线教育</span> 创业公司 · 一号位</li>
+        <li><span class="em">AI 自媒体</span>博主</li>
+      </ul>
+      <div class="intro-tail">用 Claude Code 把日常工作流写成代码 · 今天分享两个真在用的</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 · 今天给你看两件事 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">今 天 给 你 看 两 件 事</div>
+  <ul class="list-big">
+    <li><span class="num">一</span><span class="em">个人知识库</span> · 人机协作的核心基建</li>
+    <li><span class="num">二</span><span class="em">一键发布助手</span> · 一键发布到四个平台</li>
+  </ul>
+  <div class="argument-line" style="margin-top:4vh">两件都是 vibecoding 做的 · 两件现在每天在用</div>
+</section>
+
+<!-- =================================================================
+     PART 1 · 个人知识库解决方案
+     ================================================================= -->
+
+<!-- ============ 3 · Part 1 章节封面 ============ -->
+<section class="slide slide-cover">
+  <div class="cover-chapter">PART 1</div>
+  <h1 class="cover-title">
+    个人<span class="gold">知识库</span><br>解决方案
+  </h1>
+  <h2 class="subtitle" style="margin-top:2vh">从语音日记演化而来 · 现在每天在用</h2>
+</section>
+
+<!-- ============ 4 · Part 1 起手论点 · 人机协作的关键 ============ -->
+<section class="slide slide-with-brand">
+  <div class="quote-big">
+    能不能用好<span class="em">人机协作</span>
+  </div>
+  <div class="argument-line" style="margin-top:6vh;font-size:clamp(1.6rem,3vw,2.6rem);line-height:1.8">
+    关键不在 <span class="muted">你有多了解 AI</span><br>
+    在 <span class="red">AI 有多了解你</span>
+  </div>
+</section>
+
+<!-- ============ 5 · 论点一 · 大模型越强 · 你越强 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">论 点 一</div>
+  <h1 class="title">大模型每升一版<br><span class="muted">你的 prompt 技巧贬值</span><br><span class="gold">你的语料升值</span></h1>
+  <div class="argument-line" style="margin-top:5vh">
+    别去做 <span class="em">大模型未来会自己学会</span> 的事<br>
+    要去做 <span class="red">大模型越强 · 你越强</span> 的事
+  </div>
+</section>
+
+<!-- ============ 6 · 论点二 · 同样 LLM 价值差 10 倍 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">论 点 二</div>
+  <h1 class="title">同样一个 LLM <span class="gold">给不同人用</span><br>价值差 <span class="red">10 倍</span></h1>
+  <div class="argument-line" style="margin-top:5vh">
+    一个对你 <span class="em">一无所知</span> 的助手<br>
+    跟一个 <span class="em">读过你 3 年语料</span> 的助手<br>
+    <span class="red">不是同一个东西</span>
+  </div>
+</section>
+
+<!-- ============ 7 · 那 · 怎么做到 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">那 · 怎 么 做 到</div>
+  <ul class="list-big">
+    <li><span class="num">①</span>把<span class="em">尽可能多的信息</span>记下来</li>
+    <li><span class="num">②</span>在<span class="em">本地</span>清洗 · 结构化</li>
+    <li><span class="num">③</span>让 LLM <span class="em">随时取得</span> · 进入下一次对话的上下文</li>
+  </ul>
+  <div class="argument-line" style="margin-top:5vh"><span class="em">人机协作</span> 的本钱 · 是你能给 AI 多少 <span class="em">可学习的信息</span></div>
+</section>
+
+<!-- ============ 这就是我做的个人知识库 · 实物展示 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">这 就 是 我 做 的 个 人 知 识 库</div>
+  <div class="showcase-row">
+    <img src="../images/king-voice-journal.png" alt="King 的个人知识库 · 桌面启动器" class="showcase-img">
+  </div>
+  <div class="argument-line" style="margin-top:3vh">每天打开 14 小时 · <span class="em">23,180 字 / 990 段</span> · 左边实时滚动 · 右边今日简报 + 待办</div>
+</section>
+
+<!-- ============ 卡帕西的方案 · 出处 ============ -->
+<section class="slide slide-with-brand">
+  <div class="eyebrow eyebrow-big">这 套 思 路 的 来 源</div>
+  <h1 class="title">Andrej Karpathy<br><span class="gold">Append-and-Review Notes</span></h1>
+  <div class="argument-line" style="margin-top:5vh">
+    前 OpenAI 创始团队 · 前 Tesla AI 总监<br>
+    <span class="em">现 Anthropic</span> · 做大模型预训练<br>
+    在博客 / 推上反复推荐这套方法
+  </div>
+</section>
+
+<!-- ============ 7 · 卡帕西原方法 · 三步 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">卡 帕 西 原 方 法 · 三 步</div>
+  <div class="flow-box">
+    <div class="step"><b>① Append</b> · 一个 notes.txt · 想到什么/看到什么/聊到什么 · <span class="em">只追加 不修改</span> · 带时间戳</div>
+    <div class="arrow">↓</div>
+    <div class="step"><b>② Review</b> · 定期(每天/每周)把这堆原始流水 · <span class="em">喂给 LLM 整理</span></div>
+    <div class="arrow">↓</div>
+    <div class="step gold"><b>③ Wiki</b> · LLM 输出结构化 · 一人一页 / 一概念一页 · <span class="em">下次对话先读 wiki</span></div>
+  </div>
+  <div class="argument-line" style="margin-top:3vh"><span class="em">原始流水</span> 给人写 · <span class="em">整理后的 wiki</span> 给 LLM 读</div>
+</section>
+
+<!-- ============ 8 · VS 传统 RAG ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">为 什 么 它 比 传 统 RAG 好</div>
+  <div class="two-col" style="margin-top:2vh">
+    <div class="col-prompt">
+      <div class="col-prompt-title" style="color:var(--muted)">传统 RAG</div>
+      <div class="col-prompt-body">原始文档切 chunk
+↓
+embedding 算相似度
+↓
+取 top-K 段落塞 prompt
+↓
+LLM 看到 <b>未处理的碎片</b>
+↓
+信噪比低 · 容易丢上下文</div>
+    </div>
+    <div class="col-prompt">
+      <div class="col-prompt-title">卡帕西方法</div>
+      <div class="col-prompt-body">原始流水先 <b>LLM 整理</b>
+↓
+出结构化 wiki 页
+↓
+下次直接把整页塞 prompt
+↓
+LLM 看到 <b>已思考过的浓缩版</b>
+↓
+信噪比高 · 上下文完整</div>
+    </div>
+  </div>
+  <div class="argument-line" style="margin-top:3vh">RAG 是 <span class="em">搜原文</span> · 卡帕西是 <span class="em">读笔记</span></div>
+</section>
+
+<!-- ============ 9 · 我们做了哪些改变 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">在 卡 帕 西 基 础 上 · 我 们 做 了 三 个 改 变</div>
+  <ul class="list-big">
+    <li><span class="num">①</span>append 不靠手敲 · 用<span class="em">语音 / 视频转录 / 沟通记录</span>自动灌</li>
+    <li><span class="num">②</span>review 不靠定时 · <span class="em">每 3 小时 + 每天 23:30</span> 滚动跑</li>
+    <li><span class="num">③</span>wiki 加 <span class="em">本人 vs 转述</span> 严格分 · 我说的 ≠ 我听到的</li>
+  </ul>
+  <div class="argument-line" style="margin-top:4vh">卡帕西适合<span class="em">写字工作者</span> · 我们改造成适合<span class="em">说话工作者</span></div>
+</section>
+
+<!-- ============ 10 · 我们的整体流程 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">我 们 这 套 方 案 的 整 体 流 程</div>
+  <div class="flow-box">
+    <div class="step"><b>1 · 输入</b> · 语音 / 看过的内容 / 沟通记录 · <span class="em">3 个入口</span></div>
+    <div class="arrow">↓</div>
+    <div class="step"><b>2 · 落盘</b> · 切片 + 转写 + 去敏感 · 一行一段 jsonl · <span class="em">原始永不出本机</span></div>
+    <div class="arrow">↓</div>
+    <div class="step"><b>3 · review</b> · 每 3 小时 + 23:30 · DeepSeek 滚动整理</div>
+    <div class="arrow">↓</div>
+    <div class="step"><b>4 · 分流</b> · 本人说的 vs 听到的 · 严格区分</div>
+    <div class="arrow">↓</div>
+    <div class="step gold"><b>5 · wiki</b> · 一人一页 / 一概念一页 · 追加不覆盖</div>
+    <div class="arrow">↓</div>
+    <div class="step"><b>6 · 上下文</b> · 下次对话 · LLM 直接读 wiki</div>
+  </div>
+  <div class="argument-line" style="margin-top:2vh">接下来 5 张 · 每一步拆开讲 · <span class="em">做什么 + 为什么这么做</span></div>
+</section>
+
+<!-- ============ 11 · 步骤 1/6 · 输入 · 3 个入口 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">步 骤 1 / 6 · 输 入</div>
+  <h1 class="title">一个人的语料 · <span class="gold">就 3 类</span></h1>
+  <div class="three-col" style="margin-top:3vh">
+    <div class="col-card primary">
+      <div class="col-title gold-cell">① 输出</div>
+      <div class="col-desc">你说出去的话<br>跟同事 / 跟 AI<br><span class="em">全量语音录</span></div>
+    </div>
+    <div class="col-card primary">
+      <div class="col-title gold-cell">② 输入</div>
+      <div class="col-desc">你接收的<br>视频 / 文章 / 别人讲<br><span class="em">全量留底</span></div>
+    </div>
+    <div class="col-card primary">
+      <div class="col-title gold-cell">③ 思考</div>
+      <div class="col-desc">你没想清楚的<br>每天结束 AI 整理后<br><span class="em">列出待讨论</span></div>
+    </div>
+  </div>
+  <div class="argument-line" style="margin-top:4vh"><span class="em">为什么这 3 类</span> · 你送出去的 + 你收进来的 + 你脑子里在转的 · <span class="em">这就是你的全部</span></div>
+</section>
+
+<!-- ============ 12 · 步骤 1 · ① 输出 · 全部用语音 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">入 口 ① · 输 出 · 全 部 用 语 音</div>
+  <ul class="list-big" style="margin-top:2vh">
+    <li>跟<span class="em">同事</span>说的 · 麦克风全录</li>
+    <li>跟<span class="em">AI</span>聊的 · 全程语音输入</li>
+    <li>自己<span class="em">边走边想</span>的口播 · 也录</li>
+  </ul>
+  <div class="flow-box" style="margin-top:3vh">
+    <div class="step gold">DJI Mic 2(主力)</div>
+    <div class="arrow">↓ 信号丢 / 没电 / 拔了</div>
+    <div class="step">Redmi 音响麦 → Insta360 → 内置麦</div>
+  </div>
+  <div class="argument-line" style="margin-top:3vh"><span class="em">为什么不绑定 DJI</span> · 一台设备没电就全天断 · <span class="em">语料断了那一段就永远找不回</span></div>
+</section>
+
+<!-- ============ 13 · 步骤 1 · ② 输入 · 看过的内容 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">入 口 ② · 输 入 · 看 过 的 内 容</div>
+  <ul class="list-big" style="margin-top:2vh">
+    <li>刷过的视频 · 抓 <span class="em">链接 + 字幕转录</span></li>
+    <li>听过的播客 · 抓 <span class="em">章节 + 转录</span></li>
+    <li>读过的文章 · 抓 <span class="em">原文 + AI 笔记</span></li>
+    <li>别人跟你讨论 · 也是输入 · <span class="em">麦克风同步录</span></li>
+  </ul>
+  <div class="argument-line" style="margin-top:3vh"><span class="em">为什么这么做</span> · "刷过就忘"是最贵的 · 你看过的东西在塑造你的认知 · <span class="em">不存下来等于白看</span></div>
+  <div class="caption" style="margin-top:2vh;color:var(--muted)">[图位 · 等你补本地知识库截图]</div>
+</section>
+
+<!-- ============ 14 · 步骤 1 · ③ 思考 · 待讨论队列 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">入 口 ③ · 思 考 · 待 讨 论 队 列</div>
+  <h1 class="title">没想清楚的问题 · <span class="gold">留着明天聊</span></h1>
+  <div class="flow-box" style="margin-top:3vh">
+    <div class="step">每天结束 · AI 整理完今天全部语料</div>
+    <div class="arrow">↓</div>
+    <div class="step">列出 <span class="em">"king 今天提到但没想清楚的问题"</span></div>
+    <div class="arrow">↓</div>
+    <div class="step gold">等你有时间 · 跟 AI 接着这个问题往下讨论</div>
+  </div>
+  <div class="argument-line" style="margin-top:3vh"><span class="em">为什么这么做</span> · 想到一半的问题如果不挂起 · 第二天大概率就丢了 · <span class="em">AI 帮你做思考的接力</span></div>
+</section>
+
+<!-- ============ 15 · 步骤 2/6 · 落盘 · 语音链路 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">步 骤 2 / 6 · 落 盘 · 拿 语 音 入 口 举 例</div>
+  <div class="flow-box">
+    <div class="step">DJI / Redmi / 内置麦 · 任一</div>
+    <div class="arrow">↓</div>
+    <div class="step">recorder.py · WebRTC VAD 切片 · 静音不录</div>
+    <div class="arrow">↓</div>
+    <div class="step">raw/&lt;日期&gt;/*.wav · 原始落盘 · 永不出本机</div>
+    <div class="arrow">↓</div>
+    <div class="step">transcriber.py · funasr 转文字 + 声纹</div>
+    <div class="arrow">↓</div>
+    <div class="step gold">transcripts/&lt;日期&gt;.jsonl · 一行一段</div>
+  </div>
+  <div class="argument-line" style="margin-top:2vh"><span class="em">为什么 3 进程拆开</span> · 录音崩了不影响补转写 · 一损不俱损</div>
+</section>
+
+<!-- ============ 16 · 步骤 3/6 · Review · 滚动小结 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">步 骤 3 / 6 · R e v i e w · 滚 动 整 理</div>
+  <div class="vs" style="margin-top:5vh">
+    <div class="vs-side">
+      <div class="vs-name" style="color:var(--muted)">老方案</div>
+      <div class="quote-mid" style="color:var(--muted);font-size:clamp(1.4rem,2.4vw,2.2rem)">等 23:30<br>一口气总结全天</div>
+    </div>
+    <div class="vs-mid">→</div>
+    <div class="vs-side">
+      <div class="vs-name" style="color:var(--gold-3)">现在</div>
+      <div class="quote-mid" style="color:var(--gold-3);font-weight:700;font-size:clamp(1.4rem,2.4vw,2.2rem)">每 3 小时滚动<br><span class="red">下午就能问上午</span></div>
+    </div>
+  </div>
+  <div class="argument-line" style="margin-top:3vh"><span class="em">为什么这么做</span> · 全天总结一次 · 下午想用上午的语料只能等 · <span class="em">3 小时一次是延迟和成本的平衡</span></div>
+</section>
+
+<!-- ============ 17 · 步骤 4/6 · 分流 · 本人 vs 转述 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">步 骤 4 / 6 · 分 流 · 本 人 vs 转 述</div>
+  <div class="two-col" style="margin-top:2vh">
+    <div class="col-prompt">
+      <div class="col-prompt-title" style="color:var(--muted)">不分会怎样</div>
+      <div class="col-prompt-body">"某博主说 5 月 27 日要播话术结构"
+↓
+AI 写进我的待办
+↓
+打开 todo · 一脸懵
+↓
+wiki 渐渐被外部信息污染</div>
+    </div>
+    <div class="col-prompt">
+      <div class="col-prompt-title">prompt 里强制分</div>
+      <div class="col-prompt-body">"我"主动承诺 → todos
+"听说 / 视频里" → external_quotes
+具体数据(销量/价格) → 默认转述
+↓
+wiki 里我说的是我的
+我听到的归外部</div>
+    </div>
+  </div>
+  <div class="argument-line" style="margin-top:3vh"><span class="em">为什么这么做</span> · 没这一步 · 你听别人讲的内容会被 AI 当成你的承诺 · <span class="em">wiki 就废了</span></div>
+</section>
+
+<!-- ============ 18 · 步骤 5/6 · Wiki · Karpathy 落地 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">步 骤 5 / 6 · W i k i · 一 人 一 页 / 一 概 念 一 页</div>
+  <ul class="list-big">
+    <li><span class="num">①</span><span class="em">entities/</span> · 胡老师.md / 泉哥.md / 强总.md</li>
+    <li><span class="num">②</span><span class="em">concepts/</span> · AI书籍出版.md / 直播卖课.md</li>
+    <li><span class="num">③</span><span class="em">追加</span> · 每天的内容用 <code>## 2026-05-28</code> 加在文件末尾</li>
+    <li><span class="num">④</span><span class="em">频率门槛</span> · 一天提到 &lt;3 次的不建独立页</li>
+    <li><span class="num">⑤</span><span class="em">index.md</span> · 每次扫目录自动重出</li>
+  </ul>
+  <div class="argument-line" style="margin-top:3vh"><span class="em">为什么频率门槛</span> · 没这条 · 3 个月后 wiki 全是"玉米蒸鱼""路人甲" · LLM 取出来全是噪声</div>
+</section>
+
+<!-- ============ 19 · 步骤 6/6 · 取用 · 桌面启动器 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">步 骤 6 / 6 · 取 用 · 桌 面 启 动 器</div>
+  <h1 class="title">14 小时常驻 · <span class="gold">把 wiki 拉到手边</span></h1>
+  <ul class="list-big" style="margin-top:3vh">
+    <li><span class="num">左</span>实时滚动 · 启动 / 暂停 / 立即总结</li>
+    <li><span class="num">右上</span><span class="em">今日简报 / 昨日简报</span> 双栏对比</li>
+    <li><span class="num">右下</span><span class="em">待办 / 已办</span> · @ 触发现有待办加 deadline</li>
+  </ul>
+  <div class="argument-line" style="margin-top:3vh"><span class="em">为什么要这个 GUI</span> · 命令行只有我自己用 · GUI 才能让 AI 助理实时看到当前状态</div>
+</section>
+
+<!-- =================================================================
+     PART 2 · 一键发布助手
+     ================================================================= -->
+
+<!-- ============ 24 · Part 2 章节封面 ============ -->
+<section class="slide slide-cover">
+  <div class="cover-chapter">PART 2</div>
+  <h1 class="cover-title">
+    一键<span class="gold">发布助手</span><br>
+    四 个 平 台
+  </h1>
+  <h2 class="subtitle" style="margin-top:2vh">Flask × Playwright × AI 文案 × biliup</h2>
+</section>
+
+<!-- ============ 25 · 最贵的不是拍 · 是发 ============ -->
+<section class="slide">
+  <div class="quote-big">
+    最贵的不是<span class="em">拍视频</span><br><br>
+    是<span class="red">发视频</span>
+  </div>
+</section>
+
+<!-- ============ 26 · 发一条要 24 分钟 ============ -->
+<section class="slide">
+  <div class="eyebrow">手动发一条 · 多久</div>
+  <div class="vs">
+    <div class="vs-side">
+      <div class="vs-name">抖音</div>
+      <div class="midnum" style="color:var(--muted)">6 分</div>
+    </div>
+    <div class="vs-side">
+      <div class="vs-name">小红书</div>
+      <div class="midnum" style="color:var(--muted)">6 分</div>
+    </div>
+    <div class="vs-side">
+      <div class="vs-name">视频号</div>
+      <div class="midnum" style="color:var(--muted)">6 分</div>
+    </div>
+    <div class="vs-side">
+      <div class="vs-name">B 站</div>
+      <div class="midnum" style="color:var(--muted)">6 分</div>
+    </div>
+  </div>
+  <div class="quote-mid" style="margin-top:5vh">每天一条 · 一年 <span class="em">145 小时</span> · 都在干一件事</div>
+  <div class="caption" style="margin-top:1vh;color:var(--red)">→ 复制粘贴标题 · 选标签 · 上传封面 · 等转码</div>
+</section>
+
+<!-- ============ 一键多平台发布助手 · 视频实物 ============ -->
+<section class="slide">
+  <div class="eyebrow eyebrow-big">这 就 是 一 键 多 平 台 发 布 助 手</div>
+  <div class="showcase-row">
+    <video src="../videos/publish-pain-demo.mp4" class="showcase-video" controls preload="metadata" playsinline></video>
+  </div>
+  <div class="argument-line" style="margin-top:3vh">拖视频 · AI 写文案 · <span class="em">一键发四个平台</span> · 不用再走那 145 小时</div>
+</section>
+
+<!-- ============ 27 · 助手能做什么 ============ -->
+<section class="slide">
+  <div class="eyebrow">一键发布助手 · 现在长这样</div>
+  <ul class="list-big">
+    <li><span class="num">①</span><span class="em">拖视频</span>进网页 · 自动占位</li>
+    <li><span class="num">②</span><span class="em">AI 一键生文案</span> · 主标 + 2 备选 + 正文 + 标签 + 封面 4 行字</li>
+    <li><span class="num">③</span><span class="em">HTML 模板生封面</span> · 同模板出横竖两张</li>
+    <li><span class="num">④</span>勾选 抖音 / 视频号 / 小红书 / B 站</li>
+    <li><span class="num">⑤</span><span class="em">一键发布</span> · 浏览器自动跑完四个平台</li>
+  </ul>
+</section>
+
+<!-- ============ 28 · AI 文案 prompt 深度 ============ -->
+<section class="slide">
+  <div class="eyebrow">AI 文案不是 "随便写个标题"</div>
+  <h1 class="title">75 条<span class="gold">爆款公式</span> · 注入 prompt</h1>
+  <ul class="list-big" style="margin-top:3vh">
+    <li>主投平台决定公式池(抖音 / 小红书 / 视频号)</li>
+    <li>从公式池挑一条 · 套结构 · 换槽位</li>
+    <li>2 条<span class="em">备选标题</span>用不同的触发器类型(数字 / 权威 / 反差)</li>
+    <li><span class="em">每条备选都配套封面 4 行字</span></li>
+    <li>4 段<span class="em">敏感词过滤</span> · 收益承诺 / 绝对化 / 诱导 / 医疗</li>
+  </ul>
+</section>
+
+<!-- ============ 29 · AI 提供商任选 ============ -->
+<section class="slide">
+  <div class="eyebrow">AI 不绑定任何一家</div>
+  <h1 class="title">OpenAI 兼容 · <span class="gold">谁都能换</span></h1>
+  <div class="three-col" style="margin-top:3vh">
+    <div class="col-card">
+      <div class="col-title gold-cell">本地 Ollama</div>
+      <div class="col-desc">免费<br>断网也能用<br>gemma / qwen 自己选</div>
+    </div>
+    <div class="col-card primary">
+      <div class="col-title gold-cell">云端便宜</div>
+      <div class="col-desc">DeepSeek · 智谱<br>Kimi · 通义千问<br>硅基流动聚合</div>
+    </div>
+    <div class="col-card">
+      <div class="col-title">云端高质</div>
+      <div class="col-desc">OpenAI<br>(自己接其他家也行)</div>
+    </div>
+  </div>
+  <div class="caption" style="margin-top:3vh">⚙ AI 设置 · 填 Key 保存 · <span class="em">立刻换</span></div>
+</section>
+
+<!-- ============ 30 · 发布原理 ============ -->
+<section class="slide">
+  <div class="eyebrow">怎么"一键发布"四个平台</div>
+  <ul class="list-big">
+    <li><span class="num">①</span>第一次登录 · 浏览器扫码 · 存 <span class="em">cookie</span></li>
+    <li><span class="num">②</span>之后 <span class="em">Playwright</span> 模拟你的浏览器</li>
+    <li><span class="num">③</span>自动打开 · 上传 · 填字段 · 点发布</li>
+    <li><span class="num">④</span>B 站走 <span class="em">biliup CLI</span> · 科普分区</li>
+  </ul>
+  <div class="caption" style="margin-top:3vh">本质:<span class="em">机器人在替你点鼠标</span> · 不依赖平台开放接口</div>
+</section>
+
+<!-- ============ 31 · 工程细节 ============ -->
+<section class="slide">
+  <div class="eyebrow">关键工程细节</div>
+  <table class="pit-table">
+    <tr><th>问题</th><th>解决</th></tr>
+    <tr>
+      <td class="red-cell">视频号要 H.264 · 别的都允许 H.265</td>
+      <td class="gold-cell">ffprobe 探编码 · ffmpeg 自动转</td>
+    </tr>
+    <tr>
+      <td class="red-cell">抖音 &gt; 5 个话题会卡死</td>
+      <td class="gold-cell">硬截断 5 个 · 同时塞进 prompt 让 AI 自觉</td>
+    </tr>
+    <tr>
+      <td class="red-cell">大视频超时不可控</td>
+      <td class="gold-cell">按大小预估 · 120s + 每 MB 2s · 上限 30 分</td>
+    </tr>
+    <tr>
+      <td class="red-cell">一个平台挂 · 整批死</td>
+      <td class="gold-cell">每平台失败重试 1 次 · 跳过不影响其他</td>
+    </tr>
+    <tr>
+      <td class="red-cell">机器行为被风控</td>
+      <td class="gold-cell">human_delay 8-20s 随机 · 模拟人手</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ============ 收尾金句(可选保留) ============ -->
+<section class="slide">
+  <div class="quote-big">
+    把<span class="em">日常工作流</span>写成代码<br><br>
+    这些代码<br>
+    就是你的<span class="em">护城河</span>
+  </div>
+</section>
+
+<!-- ============ 收尾封面 ============ -->
+<section class="slide slide-cover">
+  <div class="cover-brand">
+    <div class="cover-line"></div>
+    <div class="cover-brand-text">VIBECODING SHARE</div>
+    <div class="cover-line"></div>
+  </div>
+  <h1 class="cover-title">
+    动手做<br>
+    才有<span class="gold">资产</span>
+  </h1>
+  <div class="cover-motto" style="margin-top:5vh">谢谢 · 现在 Q &amp; A</div>
+  <div class="cover-by">— 数字生命 KING —</div>
+</section>
+
+</div>
+
+<div class="opening-brand">
+  <img src="../images/logo.png" alt="logo">
+  <span class="brand-text">数字生命 KING · Vibecoding Share</span>
+</div>
+
+<div class="controls">
+  <div class="hint">← → 翻页 · 空格下一页 · F 全屏 · Home 首页</div>
+  <div class="progress" id="progress">1 / 1</div>
+</div>
+
+<script>
+let current = 0;
+const slides = Array.from(document.querySelectorAll('.slide'));
+const total = slides.length;
+const progress = document.getElementById('progress');
+const progressBar = document.getElementById('progressBar');
+
+function show(n){
+  if(n < 0 || n >= total) return;
+  slides[current].classList.remove('active');
+  current = n;
+  slides[current].classList.add('active');
+  progress.textContent = `${current + 1} / ${total}`;
+  progressBar.style.width = `${((current + 1) / total) * 100}%`;
+  slides[current].scrollTop = 0;
+}
+
+function next(){ show(Math.min(current + 1, total - 1)) }
+function prev(){ show(Math.max(current - 1, 0)) }
+
+document.addEventListener('keydown', e => {
+  switch(e.key){
+    case 'ArrowRight':
+    case ' ':
+    case 'PageDown':
+    case 'Enter':
+      e.preventDefault(); next(); break;
+    case 'ArrowLeft':
+    case 'PageUp':
+    case 'Backspace':
+      e.preventDefault(); prev(); break;
+    case 'Home':
+      e.preventDefault(); show(0); break;
+    case 'End':
+      e.preventDefault(); show(total - 1); break;
+    case 'f':
+    case 'F':
+      e.preventDefault();
+      if(!document.fullscreenElement){
+        document.documentElement.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+      break;
+  }
+});
+
+document.addEventListener('click', e => {
+  if(e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+  const w = window.innerWidth;
+  if(e.clientX < w / 4) prev();
+  else next();
+});
+
+let touchX = 0;
+document.addEventListener('touchstart', e => {
+  touchX = e.touches[0].clientX;
+}, {passive:true});
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchX;
+  if(dx > 60) prev();
+  else if(dx < -60) next();
+}, {passive:true});
+
+show(0);
+</script>
+
+</body>
+</html>
