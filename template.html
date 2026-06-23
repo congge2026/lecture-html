@@ -305,6 +305,15 @@ h2.subtitle{
   background:linear-gradient(90deg,var(--gold-d),var(--gold),var(--gold-3));
   transition:width 0.5s ease;
 }
+.laser-pointer{
+  position:fixed;left:0;top:0;width:22px;height:22px;border-radius:50%;
+  transform:translate(-50%,-50%);pointer-events:none;z-index:120;
+  opacity:0;transition:opacity 0.18s ease;
+  background:radial-gradient(circle,rgba(243,214,120,0.95) 0 18%,rgba(216,74,58,0.9) 22% 38%,rgba(216,74,58,0.28) 42% 68%,transparent 72%);
+  box-shadow:0 0 18px rgba(243,214,120,0.85),0 0 36px rgba(216,74,58,0.45);
+  mix-blend-mode:screen;
+}
+.laser-pointer.active{opacity:1}
 
 .opening-brand{
   position:fixed;bottom:5.5vh;left:50%;transform:translateX(-50%);
@@ -345,6 +354,7 @@ h2.subtitle{
 <body>
 
 <div class="progress-bar" id="progressBar"></div>
+<div class="laser-pointer" id="laserPointer" aria-hidden="true"></div>
 
 <div class="deck">
 
@@ -509,7 +519,7 @@ h2.subtitle{
 </div>
 
 <div class="controls">
-  <div class="hint">← → 翻页 · 空格下一页 · F 全屏 · Home 首页</div>
+  <div class="hint">← → 翻页 · 空格下一页 · F 全屏 · Home 首页 · 鼠标/触控激光笔</div>
   <div class="progress" id="progress">1 / 1</div>
 </div>
 
@@ -519,6 +529,8 @@ const slides = Array.from(document.querySelectorAll('.slide'));
 const total = slides.length;
 const progress = document.getElementById('progress');
 const progressBar = document.getElementById('progressBar');
+const laserPointer = document.getElementById('laserPointer');
+let laserTimer = null;
 
 function show(n){
   if(n < 0 || n >= total) return;
@@ -556,8 +568,20 @@ document.addEventListener('click', e => {
   else next();
 });
 
+function moveLaser(x,y){
+  laserPointer.style.left = `${x}px`;
+  laserPointer.style.top = `${y}px`;
+  laserPointer.classList.add('active');
+  clearTimeout(laserTimer);
+  laserTimer = setTimeout(() => laserPointer.classList.remove('active'), 850);
+}
+
+document.addEventListener('pointermove', e => moveLaser(e.clientX,e.clientY), {passive:true});
+document.addEventListener('pointerdown', e => moveLaser(e.clientX,e.clientY), {passive:true});
+
 let touchX = 0;
-document.addEventListener('touchstart', e => {touchX = e.touches[0].clientX}, {passive:true});
+document.addEventListener('touchstart', e => {touchX = e.touches[0].clientX;moveLaser(e.touches[0].clientX,e.touches[0].clientY)}, {passive:true});
+document.addEventListener('touchmove', e => moveLaser(e.touches[0].clientX,e.touches[0].clientY), {passive:true});
 document.addEventListener('touchend', e => {
   const dx = e.changedTouches[0].clientX - touchX;
   if(dx > 60) prev();
