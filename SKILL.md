@@ -1,6 +1,6 @@
 ---
 name: lecture-html
-description: 数字生命King · AI 商业实战课 — 生成中式黑金风格(深黑底 + 古金装饰)的 HTML 全屏讲课 slide。当要做新一节课的讲课 HTML / 把讲稿做成幻灯片 / 制作章节封面页时触发。产出是自包含单文件 HTML(背景已内嵌),可发学员、可发布、可全屏开讲。底部品牌条统一是「金线 + 数字生命King · AI 商业实战课」,所有产出共享同一套视觉。
+description: 数字生命King · AI 商业实战课 — 生成中式黑金风格(深黑底 + 古金装饰)的 HTML 全屏讲课 slide,并可把课件/口播稿/本地 CosyVoice 聪哥声音/软件操作录屏合成为课程讲解视频。当要做新一节课的讲课 HTML / 把讲稿做成幻灯片 / 制作章节封面页 / 用本地 CosyVoice 生成配音 / 合成讲解视频成片时触发。产出可为自包含单文件 HTML,也可为带本地配音和操作演示的 MP4 成片。底部品牌条统一是「金线 + 数字生命King · AI 商业实战课」,所有产出共享同一套视觉。
 ---
 
 # lecture-html · 数字生命King 讲课 HTML
@@ -20,6 +20,10 @@ description: 数字生命King · AI 商业实战课 — 生成中式黑金风格
 - "X.X 这一节做个课件"
 - "帮我做章节封面 / 开课导言"
 - "把这份讲稿改成数字生命King 风格"
+- "用本地 CosyVoice 生成聪哥声音"
+- "把课件和口播稿合成讲解视频"
+- "把软件操作录屏插进课程视频"
+- "做一版像 5.2 WorkBuddy 那样的成片"
 
 ## 视觉规则(锁定数值 · 不要改)
 
@@ -83,6 +87,8 @@ description: 数字生命King · AI 商业实战课 — 生成中式黑金风格
 | `images/logo.png` | 圆徽 logo(可换;品牌条现用金线,此图备用) |
 | `scripts/generate_images.py` | 用 gpt-image-2 跑自己的背景/logo |
 | `scripts/pack.py` / `inline.py` | 分发 — 打 zip 或内嵌成单文件(详见 README) |
+| `scripts/course_video_pipeline.py` | 本地视频流水线 — HTML 截图 + CosyVoice 配音 + FFmpeg 合成 MP4 |
+| `references/cosyvoice-video-pipeline.md` | 本地聪哥声音和课程成片流水线细则 |
 
 ## Slide 类型(13 种)
 
@@ -208,6 +214,33 @@ python <skill 目录>/scripts/inline.py <topic>.html
 ### 步骤 9(可选):如果需要自定义背景/logo
 
 调用 `scripts/generate_images.py`,详见 README。
+
+### 步骤 10(可选):生成本地 CosyVoice 讲解视频成片
+
+当用户要求“用聪哥声音”“本地 CosyVoice 配音”“把课件做成视频”“像 5.2 WorkBuddy 那样成片”时,读取 `references/cosyvoice-video-pipeline.md`,再使用 `scripts/course_video_pipeline.py`。
+
+默认流水线:
+
+```
+HTML 课件 → 1920x1080 slide 截图 → 分段口播稿 → CosyVoice2 聪哥声音 →
+磁性音色 FFmpeg 处理 → slide clips → 插入软件操作视频 → concat 成片 → QC 截图
+```
+
+关键原则:
+
+- 先把口播稿切成 slide 级短段,每段 30-60 秒以内。
+- 使用本机默认 CosyVoice 工程 `D:\CosyVoice`,不要改 CosyVoice 源码。
+- 使用 `work/congge_prompt_16k.wav` 和“沉稳低沉、富有磁性”的 instruct 作为默认聪哥音色。
+- 对实操课,中间插入真实软件操作录屏;不要只做概念 slide。
+- 成片后必须跑 `qc`,检查时长、音轨、画面比例、关键截图和结尾。
+
+命令模板:
+
+```powershell
+python scripts/course_video_pipeline.py init-config --config C:\path\lesson_config.json
+python scripts/course_video_pipeline.py all --config C:\path\lesson_config.json
+python scripts/course_video_pipeline.py qc --config C:\path\lesson_config.json
+```
 
 ---
 
